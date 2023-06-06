@@ -84,16 +84,32 @@ class GameLevel extends Phaser.Scene {
             this.arrowL = this.add.image(centerX - arrowSize - gap, centerY, 'arrowL').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
             this.arrowR = this.add.image(centerX + arrowSize + gap, centerY, 'arrowR').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
 
-            this.arrowU.setInteractive().on('pointerdown', () => { this.movingUp = true; });
+            this.arrowU.setInteractive().on('pointerdown', () => { 
+                this.movingDown = false;
+                this.movingLeft = false;
+                this.movingRight = false;
+                this.movingUp = true; });
             this.arrowU.on('pointerup', () => { this.movingUp = false; });
 
-            this.arrowD.setInteractive().on('pointerdown', () => { this.movingDown = true; });
+            this.arrowD.setInteractive().on('pointerdown', () => { 
+                this.movingUp = false;
+                this.movingLeft = false;
+                this.movingRight = false;
+                this.movingDown = true; });
             this.arrowD.on('pointerup', () => { this.movingDown = false; });
 
-            this.arrowL.setInteractive().on('pointerdown', () => { this.movingLeft = true; });
+            this.arrowL.setInteractive().on('pointerdown', () => { 
+                this.movingUp = false;
+                this.movingDown = false;
+                this.movingRight = false;
+                this.movingLeft = true; });
             this.arrowL.on('pointerup', () => { this.movingLeft = false; });
 
-            this.arrowR.setInteractive().on('pointerdown', () => { this.movingRight = true; });
+            this.arrowR.setInteractive().on('pointerdown', () => { 
+                this.movingUp = false;
+                this.movingDown = false;
+                this.movingLeft = false;
+                this.movingRight = true; });
             this.arrowR.on('pointerup', () => { this.movingRight = false; });
 
 
