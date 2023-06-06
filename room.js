@@ -12,7 +12,6 @@ class Start extends GameLevel {
 
     onEnter() {  
 
-        this.time.delayedCall(4000, () => { this.scale.startFullscreen(); });
         //this.chase();
         this.initializeDesk();
         this.checkSafe();
