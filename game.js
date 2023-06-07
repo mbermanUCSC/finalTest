@@ -20,16 +20,12 @@ class GameLevel extends Phaser.Scene {
         this.karma = data.karma || 0;
         this.tutorial = (this.location.r !== 6 || this.location.c !== 4) ? false : true;
 
-
-        this.touchMode = true;
+        this.touchMode = data.touchMode || false;
+        
         this.movingUp = false;
         this.movingDown = false;
         this.movingLeft = false;
         this.movingRight = false;
-
-        this.hPressed = false;
-        this.ePressed = true;
-
     }
 
     constructor(key, name) {
@@ -62,6 +58,59 @@ class GameLevel extends Phaser.Scene {
                 this.scale.startFullscreen();
             }
         });
+
+        let centerX = 1700; 
+        let centerY = 1000; 
+        let arrowSize = 100; // size of each arrow
+        let gap = 30; // gap between arrows
+
+        if (this.touchMode){
+            this.arrowU = this.add.image(centerX, centerY - arrowSize - gap, 'arrowU').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
+            this.arrowD = this.add.image(centerX, centerY, 'arrowD').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
+            this.arrowL = this.add.image(centerX - arrowSize - gap, centerY, 'arrowL').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
+            this.arrowR = this.add.image(centerX + arrowSize + gap, centerY, 'arrowR').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
+
+            this.arrowU.setInteractive().on('pointerdown', () => { 
+                this.movingUp = true; });
+            this.arrowU.on('pointerup', () => { this.movingUp = false; });
+            this.arrowU.on('pointerout', () => { this.movingUp = false; });
+            this.arrowU.on('pointerover', () => {
+                if (this.input.activePointer.isDown){
+                    this.movingUp = true; 
+                }
+            });
+
+
+            this.arrowD.setInteractive().on('pointerdown', () => { 
+                this.movingDown = true; });
+            this.arrowD.on('pointerup', () => { this.movingDown = false; });
+            this.arrowD.on('pointerout', () => { this.movingDown = false; });
+            this.arrowD.on('pointerover', () => {
+                if (this.input.activePointer.isDown){
+                    this.movingDown = true; 
+                }
+            });
+
+            this.arrowL.setInteractive().on('pointerdown', () => { 
+                this.movingLeft = true; });
+            this.arrowL.on('pointerup', () => { this.movingLeft = false; });
+            this.arrowL.on('pointerout', () => { this.movingLeft = false; });
+            this.arrowL.on('pointerover', () => {
+                if (this.input.activePointer.isDown){
+                    this.movingLeft = true; 
+                }
+            });
+
+            this.arrowR.setInteractive().on('pointerdown', () => { 
+                this.movingRight = true; });
+            this.arrowR.on('pointerup', () => { this.movingRight = false; });
+            this.arrowR.on('pointerout', () => { this.movingRight = false; });
+            this.arrowR.on('pointerover', () => {
+                if (this.input.activePointer.isDown){
+                    this.movingRight = true; 
+                }
+            });
+        }
         
 
         if (!this.anims.exists('backw')) {
@@ -72,58 +121,10 @@ class GameLevel extends Phaser.Scene {
             this.anims.create({ key: 'idle', frames: this.anims.generateFrameNames('player', { prefix: 'idle', start: 1, end: 2, suffix: ".png"}), frameRate: 1.5, repeat: -1});
         }
 
-        let centerX = 1700; 
-        let centerY = 1000; 
-        let arrowSize = 100; // size of each arrow
-        let gap = 30; // gap between arrows
-
-        if (this.touchMode === true){
-
-            this.arrowU = this.add.image(centerX, centerY - arrowSize - gap, 'arrowU').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
-            this.arrowD = this.add.image(centerX, centerY, 'arrowD').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
-            this.arrowL = this.add.image(centerX - arrowSize - gap, centerY, 'arrowL').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
-            this.arrowR = this.add.image(centerX + arrowSize + gap, centerY, 'arrowR').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.2);
-
-            this.arrowU.setInteractive().on('pointerdown', () => { 
-                this.movingDown = false;
-                this.movingLeft = false;
-                this.movingRight = false;
-                this.movingUp = true; });
-            this.arrowU.on('pointerup', () => { this.movingUp = false; });
-
-            this.arrowD.setInteractive().on('pointerdown', () => { 
-                this.movingUp = false;
-                this.movingLeft = false;
-                this.movingRight = false;
-                this.movingDown = true; });
-            this.arrowD.on('pointerup', () => { this.movingDown = false; });
-
-            this.arrowL.setInteractive().on('pointerdown', () => { 
-                this.movingUp = false;
-                this.movingDown = false;
-                this.movingRight = false;
-                this.movingLeft = true; });
-            this.arrowL.on('pointerup', () => { this.movingLeft = false; });
-
-            this.arrowR.setInteractive().on('pointerdown', () => { 
-                this.movingUp = false;
-                this.movingDown = false;
-                this.movingLeft = false;
-                this.movingRight = true; });
-            this.arrowR.on('pointerup', () => { this.movingRight = false; });
-
-
-            this.eButton = this.add.image(100, centerY , 'touchButton').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0).setScale(1.2);
-            this.fsButton = this.add.image(100, 100 , 'touchButton').setOrigin(0.5, 0.5).setDepth(7).setAlpha(0.7).setScale(0.7);
-            this.fsButton.setInteractive().on('pointerdown', () => { this.scale.startFullscreen();; });
-            
-        }
-
 
         //creating all animations for the game
-        this.onEnter();
 
-        
+        this.onEnter();
     }
  
 
@@ -177,6 +178,7 @@ class GameLevel extends Phaser.Scene {
                 fileImages: this.fileImages,
                 fileItems: this.fileItems,
                 questions: this.questions,
+                touchMode: this.touchMode,
                 karma: this.karma
             });
         });

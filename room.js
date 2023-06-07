@@ -11,7 +11,7 @@ class Start extends GameLevel {
     // ---------------------------------------
 
     onEnter() {  
-
+        //this.chase();
         this.initializeDesk();
         this.checkSafe();
         this.initializeDoors();
@@ -40,10 +40,7 @@ class Start extends GameLevel {
             this.resumeMusic('rushSong');
             this.pauseMusic('introSong');
         }
-
         
-    
-
         //this.backpack = this.add.image(0, 0, 'backpack').setOrigin(0, 0).setDepth(0);
 
         this.doorOpenSound = this.sound.add('doorOpen');
@@ -57,7 +54,6 @@ class Start extends GameLevel {
         this.heartBeatSound = this.sound.add('heartBeat');
 
         this.voicemail = this.sound.add('voicemail');
-
 
         const {LEFT, RIGHT, UP, DOWN, W, A, S, D, C, E, H, ESC} = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.input.keyboard.addKeys({
@@ -75,15 +71,12 @@ class Start extends GameLevel {
             esc: ESC
         });
 
-        
-
         if (this.location.r === 6 && this.location.c === 4){
             this.showTextBox("Where am I....?      ", 50, 3, 'kayce');
             this.time.delayedCall(4000, () => { this.hideTextBox(); });
             
         }
     }
-
 
     update(time, delta) {
 
@@ -95,7 +88,6 @@ class Start extends GameLevel {
         
         if (!this.paused) {
             const {keys} = this; // this.keys
-
 
             if (this.playerChased && this.tutorial) {
                 if (this.player.alpha === 0) {
@@ -371,7 +363,6 @@ class Start extends GameLevel {
                 if (this.isOverlap(this.player, object.zoneObject)) {
                     if (object.hSprite.alpha === 0) {
                         object.hSprite.setAlpha(1);
-                        this.eButton.setAlpha(0.7);
                         
                         // start tween
                         this.hTween = this.tweens.add({
@@ -389,7 +380,6 @@ class Start extends GameLevel {
                 else {
                     if (object.hSprite.alpha === 1) {
                         object.hSprite.setAlpha(0); // hSprite disappears
-                        this.eButton.setAlpha(0);
                         object.hSprite.y = object.hidingObject.y;  // return hSprite to starting location
                         this.hTween.stop(); // stop hSprite tween bounce
                     } 
@@ -432,44 +422,6 @@ class Start extends GameLevel {
                 this.physics.add.collider(this.physics.add.existing(this.hideableObjects[i].hidingObject, true), this.player);
             }
         }
-        this.eButton.setInteractive().on('pointerdown', () => {
-            if(this.checkHideable() && !this.paused) {
-                if(this.player.alpha == 0) {
-                    this.player.setAlpha(1);
-                    if (this.hidingFloor) {
-                        this.hidingFloor.destroy();
-                        this.hidingFloor = null;
-                    }
-                    
-                    this.doorCloseSound.stop();
-                    this.doorOpenSound.stop();
-
-                    this.doorOpenSound.play();
-
-                    if (!this.playerChased){
-                        this.resumeMusic('introSong');
-                    }
-                    else{
-                        this.resumeMusic('rushSong');
-                    }
-
-
-                }
-                else {
-                    this.player.setAlpha(0);
-
-                    this.doorCloseSound.stop();
-                    this.doorOpenSound.stop();
-
-                    this.doorCloseSound.play();
-
-
-                    this.hidingFloor = this.add.image(0, 0, 'hiddenImage').setOrigin(0, 0).setDisplaySize(this.w, this.h).setDepth(-2);
-                }
-            }
-        });
-
-
         this.input.keyboard.on('keydown-' + 'H', () => { 
             if(this.checkHideable() && !this.paused) {
                 if(this.player.alpha == 0) {
@@ -586,8 +538,6 @@ class Start extends GameLevel {
             if (this.isItemOverlap(this.player, item)) {
                 if (this.eSpr.alpha == 0) {
                     this.eSpr.setAlpha(1);
-                    this.eButton.setAlpha(0.6);
-
                     this.eTween = this.tweens.add({
                         targets: this.eSpr,
                         y: '-=10', // move up 10 pixels
@@ -603,7 +553,6 @@ class Start extends GameLevel {
             else {
                 if (this.eSpr.alpha == 1) {
                     this.eSpr.setAlpha(0);  
-                    this.eButton.setAlpha(0);
                     this.eTween.stop();
                 }
             }
@@ -619,11 +568,6 @@ class Start extends GameLevel {
             //console.log(this.item);
             //this.physics.add.collider(this.physics.add.existing(this.item.itemImage, true), this.player);
             this.eSpr = this.add.image(this.item.itemImage.x + 150, this.item.itemImage.y, 'eSprite').setAlpha(0);
-            this.eButton.setInteractive().on('pointerdown', () => {
-                if(this.checkPickup() && !this.paused) {
-                    this.pickUpItem(this.item);
-                } 
-            });
             this.input.keyboard.on('keydown-' + 'E', () => { 
                 if(this.checkPickup() && !this.paused) {
                     this.pickUpItem(this.item);
@@ -940,7 +884,6 @@ class Start extends GameLevel {
         image.name = i.itemName;
         this.inventoryImages.push(image);
         this.eSpr.setAlpha(0);
-        this.eButton.setAlpha(0);
         this.displayItem(image, i.itemName);
 
 
@@ -1529,7 +1472,6 @@ class Start extends GameLevel {
         if(this.isItemOverlap(this.player, desk.zoneObject)) {
                 if(desk.eSprite.alpha === 0) {
                     desk.eSprite.setAlpha(1);
-                    this.eButton.setAlpha(0.7);
 
                     this.eTween = this.tweens.add({
                         targets: desk.eSprite,
@@ -1545,7 +1487,6 @@ class Start extends GameLevel {
             }
             else {
                 if (desk.eSprite.alpha === 1) {
-                    this.eButton.setAlpha(0);
                     desk.eSprite.setAlpha(0); // eSprite disappears
                     desk.eSprite.y = desk.deskObject.y;  // return eSprite to starting location
                     this.eTween.stop(); // stop eSprite tween bounce
@@ -1613,14 +1554,6 @@ class Start extends GameLevel {
             }
             
             if(this.deskPhysical){
-                this.eButton.setInteractive().on('pointerdown', () => {
-                    if(this.atDesk(this.deskPhysical)){
-                        if(!this.paused/* && this.inventory.length > 0*/){
-                               this.openDesk();
-                        }
-                    }
-                });
-
                 this.input.keyboard.on('keydown-' + 'E', () => {
                     if(this.atDesk(this.deskPhysical)){
                         if(!this.paused/* && this.inventory.length > 0*/){
@@ -1669,15 +1602,6 @@ class Start extends GameLevel {
 
 
 
-
-    moveIdle(){
-        if (this.player.alpha === 1) { 
-            this.player.setVelocityX(0);
-            this.player.setVelocityY(0);
-            this.player.anims.play('idle', true);
-        }
-    }
-    
 
 
 
@@ -1918,8 +1842,6 @@ class NegativeVictory extends Phaser.Scene {
         });
 	}
 }
-
-
 
 const game = new Phaser.Game({
     scale: {

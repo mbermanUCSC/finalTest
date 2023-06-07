@@ -29,24 +29,6 @@ export default class Title extends Phaser.Scene {
         this.playText.on('pointerout', () => {
             this.playText.setScale(.8); 
         });
-
-
-        this.touchText = this.add.text(1300, 400, 'Touch Mode?', { color: '#FFFFFF', fontWeight: 'bold', fontSize: '64px' });
-
-        this.touchText.setInteractive();
-        
-        this.touchText.on('pointerdown', () => {
-            this.touchMode = true;
-            this.touchText.destroy();
-        });
-
-        this.playText.on('pointerover', () => {
-            this.playText.setScale(2); 
-        });
-
-        this.playText.on('pointerout', () => {
-            this.playText.setScale(1); 
-        });
         
     }
  }
